@@ -1,0 +1,30 @@
+extends ./main
+block variables
+    -var pageTitle = 'Add Product';
+block content
+    div(class='container text-center mt-5')
+        h1.text-primary Add Product
+        form(class='add-product mt-5 needs-validation' action='/Admin/Add-Product' method='post' enctype='multipart/form-data')
+            input(class='form-control mb-3' type='text' name='name' placeholder='Enter product name' required)
+            .position-relative
+                select(class='form-control mb-3 ' name="type" required)
+                    option(disabled selected) Choose product type
+                    option(value="Laptop") Laptop
+                    option(value="Tablet") Tablet
+                    option(value="Phone") Phone
+                div(class=' ps-2 pt-2 border border-dark border-2 border-start-0 border-top-0 position-absolute top-50 end-0 me-3 border-opacity-75' style='transform: translateY(-50%) rotate(45deg);') 
+            input(class='form-control mb-3' type='number' step='0.5' name='rate' placeholder='Enter product rate')
+            textarea(class='form-control mb-3' name='details' placeholder='Enter product details' required)
+            .input-group
+                input(class='form-control mb-3' type='number' name='price' placeholder='Enter product price' required)
+                span(class='input-group-text h-100') $
+            .input-group
+                span(class='input-group-text h-100') Add product image: 
+                input(class='form-control mb-3' type='file' name='img' required)
+            button(class='btn btn-primary' type='submit') Add
+block js
+    script
+        .
+            document.querySelector('.add-product button').onclick=()=>{
+                document.querySelector('.add-product').classList.add('was-validated');
+            }

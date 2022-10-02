@@ -1,0 +1,45 @@
+extends ./main
+block variables
+    -var pageTitle = 'Cart'
+block content
+    div(class='container mt-5')
+        if(products.length === 0)
+            div(class='alert alert-warning text-center') No itmes in cart
+        else
+            ul.list-unstyled
+                li
+                    ul(class='list-unstyled row mb-3')
+                            li(class="col-4") name
+                            li(class="col-3") type
+                            li(class="col-2") quantity
+                            li(class="col-3") total price
+                each product,i in products
+                    if(products.length > 1 && i > 0)
+                        hr
+                    li.position-relative
+                        span(class='position-absolute translate-middle-x pe-5')= `${i+1}.`
+                        ul(class='list-unstyled row')
+                            li(class="col-4")= product.name
+                            li(class="col-3")= product.type
+                            li(class="col-2")= product.qnt
+                            li(class="col-3")= `${product.price} $`
+                        div(class="cart-action mt-3 d-flex gap-2 justify-content-end" method='post')
+                            button(class='buy btn btn-primary' tybe='button' data-bs-toggle='modal' data-bs-target='#order-modal' value=product onclick='buyProduct(this)') Buy
+                            button(class='delete btn btn-danger' tybe='button' value=product.id onclick='deleteProduct(this)') Delete
+            div(class='modal fade' id='order-modal' )
+                div(class='modal-dialog modal-dialog-centered')
+                    div(class='modal-content')
+                        div(class='modal-header')
+                            h5(class='modal-title') 
+                            button(type='button' class='btn-close' data-bs-dismiss='modal' aria-label='close')
+                        div(class='modal-body')
+                            p.qnt
+                            p.price
+                            input(class='address form-control' type='text' placeholder='Enter your address') 
+                        div(class='modal-footer')
+                            button(type="button" class="order btn btn-primary") Order
+                            button(type="button" class="btn btn-danger" data-bs-dismiss="modal") Close
+block js
+    if(products.length)
+        script(src='/js/cart.js')
+

@@ -1,0 +1,62 @@
+extends ./main
+block variables
+    -let pageTitle = 'Order'
+block content
+    div(class='container mt-5 text-center')
+        h1.text-primary Filter Orders
+            form(class='filter-container mt-3 mb-5 position-relative' action='./filter' method='post')
+                div(class='body-container mb-2 d-flex gap-2')
+                    div(class='by-id')
+                        input(class='form-control' name='id' type='text' placeholder='Enter order id')
+                    div(class='by-status position-relative w-50')
+                        select(class='form-control' name='status')
+                            option(disabled selected) Choose order status
+                            option(value='Pending') Pending
+                            option(value='Processing') Processing
+                            option(value='Complete') Complete
+                            option(value='Incomplete') Incomplete
+                            option(value='Failed') Failed
+                        div(class=' ps-2 pt-2 border border-dark border-2 border-start-0 border-top-0 position-absolute top-50 end-0 me-3 border-opacity-75' style='transform: translateY(-50%) rotate(45deg);') 
+                    div(class='by-date input-group w-50')
+                        lable(class='input-group-text') Enter order date: 
+                        input(class='form-control' name='date' type='date')
+                button(class='btn btn-primary position-absolute end-0 ' type='submit') Filter
+        h1.text-primary Orders
+        if(Orders.length === 0)
+            div(class='alert alert-warning text-center') No Orders Found !
+        else
+            ul(class='list-unstyled mt-3')
+                li
+                    ul(class='text-center list-unstyled row mb-3')
+                            li(class="col-2") userID
+                            li(class="col-2") name
+                            li(class="col-1") quantity
+                            li(class="col-2") total price
+                            li(class="col-1") address
+                            li(class="col-2") status
+                            li(class="col-2") orderTime
+                each order,i in Orders
+                    if(i > 0)
+                        hr
+                    li.position-relative
+                        span(class='position-absolute start-0 translate-middle-x pe-5')= `${i+1}.`
+                        ul(class='text-center itme list-unstyled row')
+                            li(class="col-2 text-break" )= order.userID
+                            li(class="col-2")= order.name
+                            li(class="col-1")= order.qnt
+                            li(class="col-2")= `${order.price} $`
+                            li(class="col-1 text-break")= order.address
+                            li(class="col-2" name='status')
+                                select(class='status')
+                                    option(value='Pending', selected= order.status==='Pending' ) Pending
+                                    option(value='Processing', selected= order.status==='Processing' ) Processing
+                                    option(value='Complete', selected= order.status==='Complete') Complete
+                                    option(value='Incomplete', selected= order.status==='Incomplete') Incomplete
+                                    option(value='Failed', selected= order.status==='Failed') Failed
+                            li(class="col-2")= order.timestamp
+                        div(class="cart-action mt-3 d-flex gap-2 justify-content-end" method='post')
+                            button(class='btn btn-success' tybe='button' value=order._id onclick='changeOrder(this)') Change
+                            button(class='btn btn-danger' tybe='button' value=order._id onclick='cancelOrder(this)') Cancel
+block js
+    if(Orders.length)
+        script(src='/js/mangeOrders.js')

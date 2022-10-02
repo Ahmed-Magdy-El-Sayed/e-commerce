@@ -1,0 +1,96 @@
+extends ./main
+block variables
+    - let pageTitle = "Product"
+block content
+    -let commentExist = false;
+    if Object.keys(product).length
+        div(class='container mt-5')
+            if(isAdmin)
+                div(class='forAdmins d-flex gap-5')
+                    div(class='img')
+                        img(src=`/${product.img}` alt='product image' style='width:40vw')
+                    div
+                        h4.text-break= `id: ${product._id}`
+                        input(class='form-control mb-3' type='text' name='name' value=product.name ) 
+                        input(class='form-control mb-3' type='text' name='details' value=product.details)
+                        input(class='form-control mb-3' type='number' name='rate' value=product.rate)
+                        div(class='input-group mb-3')
+                            input(class='form-control' type='number' name='price' value=product.price)
+                            span.input-group-text $
+                        button(class='edit-product btn btn-success ' value=product type='submit') Edit
+                        button(class='delete-product btn btn-danger ms-3' value={_id:product._id, img:product.img} type='submit') Delete
+            else
+                div(class='forNotAdmins d-flex gap-5')
+                    div(class='img')
+                        img(src=`/${product.img}` alt='product image' style='width:40vw')
+                    div
+                        h1= product.name
+                        p= product.details
+                        p= `${product.rate} stars rate`
+                        h4= `${product.price} $`
+                        if(inCart)
+                            div(class='alert alert-warning') this product exsist in cart
+                        else
+                            form.add-to-cart
+                                input(class="form-control" type='number' name='qnt' value= 1 placeholder='select quantity')
+                                input(type='hidden' value=product)
+                                button(class='add btn btn-primary mt-3' value=isLoggedIn&1 type='submit') Add to Card
+            if(product.comments.length)
+                .comments.mb-3
+                    h3.text-primary Comments
+                    each comment, i in product.comments
+                        .userDetails.d-flex.gap-3.align-items-center
+                            img(src='/user.jpg')
+                            h5= comment.username
+                        p= `rating: ${comment.rating} starts`
+                        h6= comment.title
+                        p.border= comment.body
+                        if(String(comment.userID) === String(user._id))
+                            - commentExist = true;
+                            button(class='btn btn-success me-3' data-bs-toggle='collapse' data-bs-target='.collapse') Edit
+                            button(class='delete-comment btn btn-danger' value={
+                                userID:comment.userID,
+                                productID:product._id
+                                }) Delete
+                            div.edit-form.collapse
+                                p(class='d-flex gap-2 mt-3') rating product: 
+                                    input(type='radio' name='rating' id='1' value='1' checked= comment.rating === '1' required)
+                                    lable(for='1') a star
+                                    input(type='radio' name='rating' id='2' value='2' checked= comment.rating === '2')
+                                    lable(for='2') 2 stars
+                                    input(type='radio' name='rating' id='3' value='3' checked= comment.rating === '3')
+                                    lable(for='3') 3 stars
+                                    input(type='radio' name='rating' id='4' value='4' checked= comment.rating === '4')
+                                    lable(for='4') 4 stars
+                                    input(type='radio' name='rating' id='5' value='5' checked= comment.rating === '5')
+                                    lable(for='5') 5 stars
+                                input(class='form-control' type='text' name='title' value=comment.title placeholder='Enter comment title' required)
+                                textarea(class='form-control mt-3 mb-3' name='body' placeholder='Enter comment' rows='5' required)= comment.body
+                                button(class='edit-comment btn btn-primary me-3' value={
+                                comment:comment,
+                                productID:product._id
+                                }) Save
+                        if(i < product.comments.length-1)
+                            hr
+            if(isLoggedIn && !isAdmin && !commentExist)
+                form(class='add-commnet mt-5 mb-3' method='post' action='/product/comments')
+                    h3.text-primary Add Comment
+                    h5= 'user: '+user.username
+                    p(class='d-flex gap-2') rating product: 
+                        input(type='radio' name='rating' id='1' value='1' required)
+                        lable(for='1') a star
+                        input(type='radio' name='rating' id='2' value='2')
+                        lable(for='2') 2 stars
+                        input(type='radio' name='rating' id='3' value='3')
+                        lable(for='3') 3 stars
+                        input(type='radio' name='rating' id='4' value='4')
+                        lable(for='4') 4 stars
+                        input(type='radio' name='rating' id='5' value='5')
+                        lable(for='5') 5 stars
+                    input(class='form-control' type='text' name='title' placeholder='Enter comment title' required)
+                    textarea(class='form-control mt-3 mb-3' name='body' placeholder='Enter comment' rows='5' required)
+                    button(class='btn btn-primary' type='submit' name='dataRest' value=JSON.stringify({username:user.username, userID:user._id, productID:product._id})) Send
+    else
+        div(class="alert alert-danger w-100 text-center") product not found !
+    block js
+    script(src='/js/product.js')

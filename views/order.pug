@@ -1,0 +1,42 @@
+extends ./main
+block variables
+    -let pageTitle = 'Order'
+block content
+    div(class='container mt-5')
+        if(Orders.length === 0)
+            div(class='alert alert-warning text-center') No Orders
+        else
+            ul.list-unstyled
+                li
+                    ul(class='list-unstyled row mb-3')
+                            li(class="col-2") name
+                            li(class="col-2") quantity
+                            li(class="col-2") total price
+                            li(class="col-2") address
+                            li(class="col-2") status
+                            li(class="col-2") orderTime
+                each order,i in Orders
+                    if(i > 0)
+                        hr
+                    li.position-relative
+                        span(class='position-absolute translate-middle-x pe-5')= `${i+1}.`
+                        ul(class='list-unstyled row')
+                            li(class="col-2")= order.name
+                            li(class="col-2")= order.qnt
+                            li(class="col-2")= `${order.price} $`
+                            li(class="col-2")= order.address
+                            li(class="col-2")= order.status
+                            li(class="col-2")= order.timestamp
+                        div(class="cart-action mt-3 d-flex gap-2 justify-content-end" method='post')
+                            button(class='delete btn btn-danger' tybe='button' value=order._id onclick='cancelOrder(this)') cancel
+block js
+    if(Orders.length)
+        script
+            .
+                const cancelOrder= target =>{
+                    fetch('/order/cancel',{
+                        method:'post',
+                        headers:{ 'Content-Type':'application/json' },
+                        body : JSON.stringify({id : target.value})
+                    }).then(res=>{if(res.status === 201) location.reload()})
+                }

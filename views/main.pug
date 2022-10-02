@@ -1,0 +1,36 @@
+- let links = [{title:'Home', href:'/'}, {title:'Cart', href:'/cart'}, {title:'Orders', href:'/orders'}, {title:'Mange Orders', href:'/admin/mange-orders'}, {title:'Add Product', href:'/admin/add-Product'}, {title:'Login', href:'/login'}, {title:'Sign Up', href:'/signup'} ]
+block variables
+doctype html
+html
+    head
+        meta(charset='UTF-8')
+        meta(http-equiv='X-UA Compatible', content='IE=edge')
+        meta(name='viewport', content='width=device-width, initial-scale=1.0')
+        title= pageTitle
+        link(rel='stylesheet', href='/css/bootstrap.min.css')
+        block linkCSS
+    body(style='box-sizing:border-box')
+        nav(class="navbar navbar-dark navbar-expand-md bg-dark")
+            .container-fluid
+                a(class="navbar-brand" href="/") e-commerce
+                button(class="navbar-toggler text-dark border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
+                    span(class='navbar-toggler-icon')
+                div(class="collapse navbar-collapse" id="navbarSupportedContent")
+                    ul(class="navbar-nav ms-auto me-auto")
+                        each link in links
+                            if((link.title === 'Sign Up' || link.title === 'Login') && isLoggedIn) 
+                            else if ((link.title === 'Mange Orders' || link.title === 'Add Product') && !isAdmin)
+                            else if ((link.title === 'Cart' || link.title === 'Orders') && isAdmin)
+                            else
+                                li(class="nav-item")
+                                    a(class=`nav-link ps-0 pe-lg-3 ${link.title === pageTitle||(link.title ==='Home' && pageTitle === 'e-commerce')? 'active' : ''}` href = link.href)= link.title
+                    form(class="d-flex justify-content-end" action='/' method='get' role="search")
+                        input(class="form-control me-2" type="search" name='search' placeholder="Search" aria-label="Search")
+                        button(class="btn btn-outline-primary" type="submit") Search
+                    if (isLoggedIn)
+                        button(class="btn btn-outline-danger ms-2"
+                            type="button"
+                            onclick="(()=>{window.location.href='/logout'})()") Logout
+        block content
+        script(src='/js/bootstrap.bundle.min.js')
+        block js
