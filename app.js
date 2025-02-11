@@ -5,7 +5,7 @@ const sessionStore = require('connect-mongodb-session')(session)
 const {isLoggedIn} = require('./controller/middelwares')
 
 const STORE = new sessionStore({
-    uri:"mongodb://localhost:27017/online-shopping",
+    uri:"mongodb+srv://AhmedMagdy:1YLcRgPR4L0fPQzW@cluster0.kbcoecs.mongodb.net/e-commerce?retryWrites=true&w=majority",
     collection:"sessions"
 })
 
