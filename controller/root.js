@@ -42,7 +42,7 @@ const getProduct = (req,res) =>{
         res.render('product', {
             product: p,
             isLoggedIn: res.locals.isLoggedIn,
-            user: res.locals.isLoggedIn? req.session.user : null,
+            user: res.locals.isLoggedIn? req.session.user : {},
             isAdmin: res.locals.isLoggedIn? req.session.user.isAdmin: false,
             inCart: res.locals.isLoggedIn? req.session.productsIDs.map(({productID})=>{return JSON.stringify(productID) === JSON.stringify(id)? true : false}). includes(true): false
         })
