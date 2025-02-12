@@ -78,8 +78,9 @@ const getSignup =(req,res)=>{
 }
 
 const postUser = (req,res) =>{
-    createUser(req.body).then(m=>{
-        m? res.redirect(301,'/login') : res.status(500).send('<div style="text-align:center; color:red">Filed to create account</div>');
+    createUser(req.body).then(result=>{
+        result===true? res.redirect(301,'/login') : 
+        result.msg? res.status(409).send('<div style="text-align:center; color:red">'+result.msg+'</div>') : res.status(500).send('<div style="text-align:center; color:red">Filed to create account</div>');
     })
 }
 
