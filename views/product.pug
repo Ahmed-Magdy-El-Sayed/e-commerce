@@ -3,7 +3,7 @@ block variables
     - let pageTitle = "Product"
 block content
     -let commentExist = false;
-    if Object.keys(product).length
+    if product && Object.keys(product).length
         div(class='container mt-5')
             if(isAdmin)
                 div(class='forAdmins d-flex gap-5')
