@@ -27,10 +27,10 @@ module.exports ={
         if(encrypted){
             try {
                 return dbConnect(async ()=>{
-                    const user = await usersModel.findOne({email: data.email})
-                    if(user) return {msg: "The email is already used!"}
-                    await new usersModel(data).save()
-                    return true
+                    const user = await usersModel.findOne({email: data.email});
+                    if(user) return {msg: "The email is already used!"};
+                    await new usersModel(data).save();
+                    return true;
                 })
             } catch (err) {
                 throw err
