@@ -4,16 +4,17 @@ block variables
 block linkCSS
     link(rel='stylesheet', href='/css/style.css')
 block content
-        div(class='container mt-3 d-flex flex-wrap justify-content-center gap-3')
-            if products.length
-                each product in products
-                    div(class="card text-center" style="width: 18rem; cursor:pointer" onclick="(()=>{window.location.href='./product/"+product.id+"'})()")
-                        .h-75
-                            img(src= product.img class="card-img-top w-75" alt="device")
-                        div(class="card-body")
-                            p(class="card-text")= product.name
-                            p(class="card-text")= `${product.price} $`
-            else
-                div(class='alert alert-danger w-100 text-center') there is no product
+    div(class='container mt-3 d-flex flex-wrap justify-content-center gap-3')
+        -if(products?.length)
+            each product in products
+                div(class="card text-center" style="width: 18rem; cursor:pointer" onclick="(()=>{window.location.href='./product/"+product.id+"'})()")
+                    .h-75
+                        img(src= product.img class="card-img-top w-75" alt="device")
+                    div(class="card-body")
+                        p(class="card-text")= product.name
+                        p(class="card-text")= `${product.price} $`
+        -else
+            div(class='alert alert-danger w-100 text-center')= searchVal? "There is no product match \""+searchVal+"\"" : "No Products"
+
 
 

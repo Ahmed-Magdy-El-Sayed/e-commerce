@@ -19,24 +19,27 @@ module.exports = {
     getProducts : ()=>{
         try{
             return dbConnect(async()=>{
-                return {resalt:await productsModel.find({}), isNeeded:true}
+                return await productsModel.find({})
             })
         }catch(err){
             throw err
         }
     },
-    selectProducts:name=>{
+    selectProducts:nameSearch=>{
         try{
         return dbConnect(async ()=>{
             const value = await productsModel.find({}).then(async products=>{
                 let matchedProducts = await products.filter(p=>{
-                    return p.name.split(' ').map(word =>{
-                        return word.toLowerCase() === name.toLowerCase()? true : false;
-                    }).includes(true);
+                    result = nameSearch.split(' ').map(wordSearch=>{
+                        return p.name.split(' ').map(word =>{
+                            return word.toLowerCase() === wordSearch.toLowerCase()? true : false;
+                        }).includes(true)
+                    }).includes(false);
+                    return result ? false : true;
                 })
                 return matchedProducts;
             })
-            return {resalt:value, isNeeded:true}
+            return value
         })
         }catch(err){
             throw err
@@ -45,7 +48,7 @@ module.exports = {
     getProductById: id=>{
         try{
             return dbConnect(async ()=>{
-                return {resalt:await productsModel.findById(id), isNeeded:true}
+                return await productsModel.findById(id)
             })
         }catch(err){
             throw err
@@ -54,7 +57,8 @@ module.exports = {
     addProduct: product=>{
         try{
             return dbConnect(async ()=>{
-                return {resalt: await new productsModel(product).save(), isNeeded:false}
+                await new productsModel(product).save()
+                return null
             })
         }catch(err){
             throw err
@@ -63,8 +67,8 @@ module.exports = {
     updateProduct: ({id, newProduct}) =>{
         try{
             return dbConnect(async()=>{
-                return {resalt:await productsModel.updateOne({_id: id},{$set:{...newProduct}}), isNeeded:false}
-                
+                await productsModel.updateOne({_id: id},{$set:{...newProduct}})
+                return null
             })
         }catch(err){
             throw err
@@ -73,9 +77,10 @@ module.exports = {
     removeProduct: ({id, img})=>{
         try{
             return dbConnect(async()=>{
-                return {resalt:await productsModel.findByIdAndDelete(id).then(()=>{
-                    return fs.promises.unlink(path.resolve(__dirname,'..', 'images', img))
-                }), isNeeded:false}
+                await productsModel.findByIdAndDelete(id).then(()=>{
+                    fs.promises.unlink(path.resolve(__dirname,'..', 'images', img))
+                })
+                return null
             })
         }catch(err){
             throw err
@@ -85,16 +90,14 @@ module.exports = {
         const dataRest = JSON.parse(comment.dataRest)
         try {
             return dbConnect(async()=>{
-                return {
-                    resalt: await productsModel.findByIdAndUpdate(dataRest.productID,{$push:{comments:{
+                await productsModel.findByIdAndUpdate(dataRest.productID,{$push:{comments:{
                         username:dataRest.username,
                         userID:dataRest.userID,
                         rating:comment.rating,
                         title:comment.title,
                         body: comment.body
-                    }}}),
-                    isNeeded: false
-                }
+                    }}})
+                return null
             })
         } catch (err) {
             throw err
@@ -102,11 +105,12 @@ module.exports = {
     },updateComment:({comment, productID})=>{
         try {
             return dbConnect(async()=>{
-                return {resalt:await productsModel.updateOne({_id:productID,'comments.userID':comment.userID},{$set:{
+                await productsModel.updateOne({_id:productID,'comments.userID':comment.userID},{$set:{
                     'comments.$.title':comment.title,
                     'comments.$.body':comment.body,
                     'comments.$.rating':comment.rating
-                }}),isNeeded:false}
+                }})
+                return null
             })
         } catch (err) {
             throw err
@@ -115,7 +119,8 @@ module.exports = {
     deleteComment:data=>{
         try {
             return dbConnect(async ()=>{
-                return {resalt:await productsModel.updateOne({_id:data.productID},{$pull:{comments:{'userID':data.userID}}}),isNeeded:false}
+                await productsModel.updateOne({_id:data.productID},{$pull:{comments:{'userID':data.userID}}})
+                return null
             })
         } catch (err) {
             throw err

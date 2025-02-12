@@ -20,7 +20,8 @@ const getHome = (req, res)=>{
     let searchVal = req.query.search
     if(searchVal){
         selectProducts(searchVal).then(p=>{
-            res.render('index',{products: p, 
+            res.render('index',{searchVal,
+                products: p, 
                 isLoggedIn: res.locals.isLoggedIn,
                 isAdmin: res.locals.isLoggedIn? req.session.user.isAdmin: false
             })
@@ -78,8 +79,9 @@ const getSignup =(req,res)=>{
 }
 
 const postUser = (req,res) =>{
-    createUser(req.body).then(m=>{
-        m? res.redirect(301,'/login') : res.status(500).send('<div style="text-align:center; color:red">Filed to create account</div>');
+    createUser(req.body).then(result=>{
+        result===true? res.redirect(301,'/login') : 
+        result.msg? res.status(409).send('<div style="text-align:center; color:red">'+result.msg+'</div>') : res.status(500).send('<div style="text-align:center; color:red">Filed to create account</div>');
     })
 }
 
@@ -124,7 +126,7 @@ const addProductCart =(req, res) =>{
     })
 }
 
-const getCart = (req, res)=>{console.log(req.session.user.username)
+const getCart = (req, res)=>{
     getCartPorducts(req.session.user._id).then(products=>{
         res.render('cart',{products:products});
     }).catch(()=>{res.status(500).send('internal server error')})

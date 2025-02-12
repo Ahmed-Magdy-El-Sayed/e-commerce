@@ -3,9 +3,9 @@ block variables
     -let pageTitle = 'Order'
 block content
     div(class='container mt-5')
-        if(Orders.length === 0)
+        -if(Orders?.length === 0)
             div(class='alert alert-warning text-center') No Orders
-        else
+        -else
             ul.list-unstyled
                 li
                     ul(class='list-unstyled row mb-3')

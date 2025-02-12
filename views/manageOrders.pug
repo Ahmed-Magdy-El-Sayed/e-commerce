@@ -22,9 +22,9 @@ block content
                         input(class='form-control' name='date' type='date')
                 button(class='btn btn-primary position-absolute end-0 ' type='submit') Filter
         h1.text-primary Orders
-        if(Orders.length === 0)
+        -if(Orders?.length === 0)
             div(class='alert alert-warning text-center') No Orders Found !
-        else
+        -else
             ul(class='list-unstyled mt-3')
                 li
                     ul(class='text-center list-unstyled row mb-3')

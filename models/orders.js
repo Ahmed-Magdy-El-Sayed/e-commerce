@@ -21,7 +21,7 @@ module.exports={
     getOrders: userId=>{
         try {
             return dbConnect(async ()=>{
-                return {resalt:await Orders.find({userID: userId}), isNeeded:true}
+                return await Orders.find({userID: userId})
             })
         } catch (err) {
             throw err
@@ -30,7 +30,8 @@ module.exports={
     postOrder: order=>{
         try {
             return dbConnect(async ()=>{
-                return {resalt:await new Orders(order).save(), isNeeded:false}
+                await new Orders(order).save()
+                return null
             })
         } catch (err) {
             throw err
@@ -39,7 +40,8 @@ module.exports={
     deleteOrderByUser:orderId=>{
         try {
             return dbConnect(async ()=>{
-                return {resalt:await Orders.findByIdAndDelete(orderId), isNeeded:false}
+                await Orders.findByIdAndDelete(orderId)
+                return null
             })
         } catch (err) {
             throw err
@@ -48,7 +50,7 @@ module.exports={
     getAdminOrders: ()=>{
         try {
             return dbConnect(async ()=>{
-                return {resalt:await Orders.find(), isNeeded:true}
+                return await Orders.find()
             })
         } catch (err) {
             throw err
@@ -57,7 +59,8 @@ module.exports={
     changeOrderState: ({id, newStatus})=>{
         try {
             return dbConnect(async ()=>{
-                return {resalt:await Orders.findByIdAndUpdate(id, {status: newStatus}), isNeeded:false}
+                await Orders.findByIdAndUpdate(id, {status: newStatus})
+                return null
             })
         } catch (err) {
             throw err
@@ -66,7 +69,8 @@ module.exports={
     deleteOrderByAdmin: ({id})=>{
         try {
             return dbConnect(async ()=>{
-                return {resalt:await Orders.findByIdAndDelete(id), isNeeded:false}
+                await Orders.findByIdAndDelete(id)
+                return null
             })
         } catch (err) {
             throw err
@@ -90,7 +94,7 @@ module.exports={
                         }
                     }
                 })
-                return {resalt:value, isNeeded:true}
+                return value
             })
         } catch (err) {
             throw err

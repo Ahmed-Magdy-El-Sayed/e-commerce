@@ -17,7 +17,8 @@ module.exports = {
     addToCart : data=>{
         try {
             return dbConnect(async ()=>{
-                return {resalt:await new cart(data).save(), isNeeded:false}
+                await new cart(data).save()
+                return null;
             })
         } catch (err) {
             throw err
@@ -26,7 +27,7 @@ module.exports = {
     getCartPorducts:id=>{
         try {
             return dbConnect(async ()=>{
-                return {resalt:await cart.find({userID:id}), isNeeded:true}
+                return await cart.find({userID:id})
             })
         } catch (err) {
             throw err
@@ -35,7 +36,8 @@ module.exports = {
     removeProductCart: id =>{
         try {
             return dbConnect(async()=>{
-                return {resalt:await cart.findByIdAndDelete(id), isNeeded:false}
+                await cart.findByIdAndDelete(id)
+                return null
             })
         } catch (err) {
             throw err
@@ -44,7 +46,7 @@ module.exports = {
     getCartPorductsID: id =>{
         try {
             return dbConnect(async ()=>{
-                return {resalt:await cart.find({userID: id},{productID:1}), isNeeded:true}
+                return await cart.find({userID: id},{productID:1})
             })
         } catch (err) {
             throw err
