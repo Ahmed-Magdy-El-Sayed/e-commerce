@@ -6,7 +6,7 @@ const uSchema = new mongoose.Schema({
     username: String,
     email: String,
     password: String,
-    isAdimn:{
+    isAdmin:{
         type: Boolean,
         default: false,
     }
@@ -27,7 +27,10 @@ module.exports ={
         if(encrypted){
             try {
                 return dbConnect(async ()=>{
-                    return {resalt:await new usersModel(data).save(), isNeeded:false}
+                    const user = await usersModel.findOne({email: data.email})
+                    if(user) return {msg: "The email is already used!"}
+                    await new usersModel(data).save()
+                    return true
                 })
             } catch (err) {
                 throw err
