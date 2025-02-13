@@ -9,8 +9,8 @@ const STORE = new sessionStore({
     collection:"sessions"
 })
 
-app.use(express.static('./public'))
-app.use(express.static('./images'))
+app.use(express.static(__dirname+'./public'))
+app.use(express.static(__dirname+'./images'))
 app.use(express.urlencoded({extended:false}))
 app.use(express.json())
 app.use(session({
@@ -21,7 +21,7 @@ app.use(session({
 }))
 app.use(isLoggedIn)
 app.set('view engine','pug')
-app.set('views','./views')
+app.set('views',__dirname+'./views')
 
 app.use('/',require('./routers/root'))
 app.use('/admin',require('./routers/admin'))
